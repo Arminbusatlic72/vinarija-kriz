@@ -13,14 +13,14 @@ const ContactLayout = () => {
           Get in Touch
         </h2>
         <p className="text-lg font-semibold text-gray-700 dark:text-gray-300">
-          We'd love to hear from you. Whether you have a question, feedback, or just want to say hi
-          – feel free to reach out using the form.
+          As we're busy growing grapes, making wine, and raising our kid, short tastings and sales
+          are available by appointment only. Feel free to reach out for anything else!
         </p>
       </div>
 
       {/* Right Side – Contact Form */}
       <form
-        className="w-full max-w-md space-y-4 rounded-xl bg-white p-6 shadow-md dark:bg-gray-800"
+        className="w-full max-w-md space-y-4 bg-white p-6 shadow-md dark:bg-gray-800"
         onSubmit={(e) => e.preventDefault()}
       >
         <div>
