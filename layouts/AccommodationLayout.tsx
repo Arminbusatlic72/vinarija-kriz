@@ -52,8 +52,13 @@ export default function AccommodationLayout({ content, children }: Props) {
           {displayedImages.map((src, idx) => (
             <div
               key={idx}
+              role="button"
+              tabIndex={0}
               className="relative mb-4 h-48 w-full cursor-pointer overflow-hidden shadow-md hover:opacity-80"
               onClick={() => setSelectedIndex(idx)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') setSelectedIndex(idx)
+              }}
             >
               <Image src={src} alt={`Accommodation ${idx + 1}`} fill className="object-cover" />
             </div>
@@ -100,20 +105,17 @@ export default function AccommodationLayout({ content, children }: Props) {
       {/* Modal Lightbox */}
       {selectedIndex !== null && (
         <div
+          role="button"
+          tabIndex={0}
           className="bg-opacity-80 fixed inset-0 z-50 flex items-center justify-center bg-black"
           onClick={() => setSelectedIndex(null)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              setSelectedIndex(null)
+            }
+          }}
         >
           <div className="relative flex h-auto max-h-[90%] w-auto max-w-5xl items-center justify-center">
-            <button
-              className="absolute top-1/2 left-2 -translate-y-1/2 rounded bg-black/30 px-3 py-2 text-3xl text-white hover:bg-black/50"
-              onClick={(e) => {
-                e.stopPropagation()
-                prevImage()
-              }}
-            >
-              ‹
-            </button>
-
             <Image
               src={images[selectedIndex]}
               alt={`Enlarged accommodation image ${selectedIndex + 1}`}
@@ -121,17 +123,6 @@ export default function AccommodationLayout({ content, children }: Props) {
               height={800}
               className="shadow-lg"
             />
-
-            <button
-              className="absolute top-1/2 right-2 -translate-y-1/2 rounded bg-black/30 px-3 py-2 text-3xl text-white hover:bg-black/50"
-              onClick={(e) => {
-                e.stopPropagation()
-                nextImage()
-              }}
-            >
-              ›
-            </button>
-
             <button
               className="absolute top-2 right-2 text-3xl text-white"
               onClick={() => setSelectedIndex(null)}
@@ -139,6 +130,24 @@ export default function AccommodationLayout({ content, children }: Props) {
               ✕
             </button>
           </div>
+          <button
+            className="absolute top-1/2 left-2 -translate-y-1/2 rounded bg-black/30 px-3 py-2 text-3xl text-white hover:bg-black/50"
+            onClick={(e) => {
+              e.stopPropagation()
+              prevImage()
+            }}
+          >
+            ‹
+          </button>
+          <button
+            className="absolute top-1/2 right-2 -translate-y-1/2 rounded bg-black/30 px-3 py-2 text-3xl text-white hover:bg-black/50"
+            onClick={(e) => {
+              e.stopPropagation()
+              nextImage()
+            }}
+          >
+            ›
+          </button>
         </div>
       )}
     </div>

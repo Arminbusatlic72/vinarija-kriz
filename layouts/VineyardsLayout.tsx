@@ -48,7 +48,12 @@ export default function VineyardsLayout({ content, children }: Props) {
           <p className="text-gray-700 dark:text-gray-300">{text}</p>
         </div>
         <div className="relative mb-6 h-64 w-full overflow-hidden shadow-md xl:mb-0">
-          <Image src={sectionImage1} alt="Section" fill className="object-cover" />
+          <Image
+            src={sectionImage1 || '/static/images/fallback.jpg'}
+            alt="Section"
+            fill
+            className="object-cover"
+          />
         </div>
       </div>
 
