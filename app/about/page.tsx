@@ -1,20 +1,15 @@
-import { Authors, allAuthors } from 'contentlayer/generated'
-import { MDXLayoutRenderer } from 'pliny/mdx-components'
-import AuthorLayout from '@/layouts/AuthorLayout'
-import { coreContent } from 'pliny/utils/contentlayer'
-import { genPageMetadata } from 'app/seo'
+import AboutLayout from '@/layouts/AboutLayout'
 
-export const metadata = genPageMetadata({ title: 'About' })
+const aboutContent = {
+  title: 'About Our Company',
+  description:
+    'We are passionate about delivering exceptional service and creating memorable experiences. Our team is dedicated to ensuring every detail is perfect.',
+  images: [
+    '/static/images/Kriz-portreti-vinarija-2022-19.jpg',
+    '/static/images/Vinarija-Kriz-68.jpg',
+  ],
+}
 
-export default function Page() {
-  const author = allAuthors.find((p) => p.slug === 'default') as Authors
-  const mainContent = coreContent(author)
-
-  return (
-    <>
-      <AuthorLayout content={mainContent}>
-        <MDXLayoutRenderer code={author.body.code} />
-      </AuthorLayout>
-    </>
-  )
+export default function AboutPage() {
+  return <AboutLayout content={aboutContent} />
 }

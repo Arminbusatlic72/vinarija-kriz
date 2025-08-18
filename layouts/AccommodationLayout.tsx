@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactNode } from 'react'
+import { ReactNode, useState } from 'react'
 import Image from 'next/image'
 
 interface Accommodation {
@@ -19,6 +19,23 @@ interface Props {
 export default function AccommodationLayout({ content, children }: Props) {
   const { title, description, amenities, images, airbnbUrl } = content
 
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
+  const [showAll, setShowAll] = useState(false)
+
+  const displayedImages = showAll ? images : images.slice(0, 2)
+
+  const prevImage = () => {
+    if (selectedIndex !== null) {
+      setSelectedIndex((selectedIndex - 1 + images.length) % images.length)
+    }
+  }
+
+  const nextImage = () => {
+    if (selectedIndex !== null) {
+      setSelectedIndex((selectedIndex + 1) % images.length)
+    }
+  }
+
   return (
     <div className="divide-y divide-gray-200 dark:divide-gray-700">
       {/* Header */}
@@ -32,11 +49,24 @@ export default function AccommodationLayout({ content, children }: Props) {
       <div className="items-start space-y-2 xl:grid xl:grid-cols-3 xl:gap-x-8 xl:space-y-0">
         {/* Left - Images */}
         <div className="flex flex-col items-center space-x-2 pt-8">
-          {images.map((src, idx) => (
-            <div key={idx} className="relative mb-4 h-48 w-full overflow-hidden shadow-md">
+          {displayedImages.map((src, idx) => (
+            <div
+              key={idx}
+              className="relative mb-4 h-48 w-full cursor-pointer overflow-hidden shadow-md hover:opacity-80"
+              onClick={() => setSelectedIndex(idx)}
+            >
               <Image src={src} alt={`Accommodation ${idx + 1}`} fill className="object-cover" />
             </div>
           ))}
+
+          {images.length > 3 && (
+            <button
+              className="mt-2 w-full rounded bg-black px-4 py-2 text-white hover:bg-gray-800"
+              onClick={() => setShowAll(!showAll)}
+            >
+              {showAll ? 'Show less' : 'Show all images'}
+            </button>
+          )}
         </div>
 
         {/* Right - Details */}
@@ -58,7 +88,7 @@ export default function AccommodationLayout({ content, children }: Props) {
             href={airbnbUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="important inline-block bg-red-500 px-6 py-3 text-white! no-underline shadow-md hover:bg-red-600"
+            className="inline-block bg-black px-6 py-3 text-white! no-underline shadow-md transition hover:bg-gray-800"
           >
             Book on Airbnb
           </a>
@@ -66,6 +96,51 @@ export default function AccommodationLayout({ content, children }: Props) {
           {children && <div className="mt-6">{children}</div>}
         </div>
       </div>
+
+      {/* Modal Lightbox */}
+      {selectedIndex !== null && (
+        <div
+          className="bg-opacity-80 fixed inset-0 z-50 flex items-center justify-center bg-black"
+          onClick={() => setSelectedIndex(null)}
+        >
+          <div className="relative flex h-auto max-h-[90%] w-auto max-w-5xl items-center justify-center">
+            <button
+              className="absolute top-1/2 left-2 -translate-y-1/2 rounded bg-black/30 px-3 py-2 text-3xl text-white hover:bg-black/50"
+              onClick={(e) => {
+                e.stopPropagation()
+                prevImage()
+              }}
+            >
+              ‹
+            </button>
+
+            <Image
+              src={images[selectedIndex]}
+              alt={`Enlarged accommodation image ${selectedIndex + 1}`}
+              width={1200}
+              height={800}
+              className="shadow-lg"
+            />
+
+            <button
+              className="absolute top-1/2 right-2 -translate-y-1/2 rounded bg-black/30 px-3 py-2 text-3xl text-white hover:bg-black/50"
+              onClick={(e) => {
+                e.stopPropagation()
+                nextImage()
+              }}
+            >
+              ›
+            </button>
+
+            <button
+              className="absolute top-2 right-2 text-3xl text-white"
+              onClick={() => setSelectedIndex(null)}
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
